@@ -47,61 +47,6 @@ public class AVL<K extends Comparable<K>, T> implements IAVL<K, T> {
         return node;
     }
 
-    public void delete(K key) {
-        root = delete(root, key);
-    }
-
-    private Node<K, T> delete(Node<K, T> node, K key) {
-        if (node == null) {
-            return node;
-        }
-        if (key.compareTo(node.getKey()) < 0) {
-            node.setLeft(delete(node.getLeft(), key));
-        } else if (key.compareTo(node.getKey()) > 0) {
-            node.setRight(delete(node.getRight(), key));
-        } else {
-            if ((node.getLeft() == null) || (node.getRight() == null)) {
-                Node<K, T> temp = null;
-                if (temp == node.getLeft()) {
-                    temp = node.getRight();
-                } else {
-                    temp = node.getLeft();
-                }
-                if (temp == null) {
-                    temp = node;
-                    node = null;
-                } else {
-                    node = temp;
-                }
-            } else {
-                Node<K, T> temp = minValueNode(node.getRight());
-                node.setKey(temp.getKey());
-                node.setData(temp.getData());
-                node.setRight(delete(node.getRight(), temp.getKey()));
-            }
-        }
-        if (node == null) {
-            return node;
-        }
-        node.setHeight(1 + Math.max(height(node.getLeft()), height(node.getRight())));
-        int balance = getBalance(node);
-        if (balance > 1 && getBalance(node.getLeft()) >= 0) {
-            return rightRotate(node);
-        }
-        if (balance > 1 && getBalance(node.getLeft()) < 0) {
-            node.setLeft(leftRotate(node.getLeft()));
-            return rightRotate(node);
-        }
-        if (balance < -1 && getBalance(node.getRight()) <= 0) {
-            return leftRotate(node);
-        }
-        if (balance < -1 && getBalance(node.getRight()) > 0) {
-            node.setRight(rightRotate(node.getRight()));
-            return leftRotate(node);
-        }
-        return node;
-    }
-
     private Node<K, T> minValueNode(Node<K, T> node) {
         Node<K, T> current = node;
         while (current.getLeft() != null) {
